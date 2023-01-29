@@ -8,7 +8,9 @@ import (
 type Session struct {
 	step    int
 	gamemap *maps.GameMap
-	user    *user.User
+
+	// user is extracted from map source
+	user *user.User
 }
 
 func (s *Session) Init() {
@@ -19,12 +21,5 @@ func (s *Session) Init() {
 
 func (s *Session) Render() *maps.UserVision {
 	s.step++
-	s.user.Insert(s.gamemap)
-	userMap := maps.UserVision{}
-	for i := 0; i < 11; i++ {
-		for j := 0; j < 11; j++ {
-			userMap[i][j] = (*s.gamemap)[i][j]
-		}
-	}
-	return &userMap
+	return s.user.RenderVision(s.gamemap)
 }
