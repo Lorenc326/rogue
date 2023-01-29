@@ -1,22 +1,20 @@
 package maps
 
 import (
-	"fmt"
-	"os"
+	_ "embed"
 	"strings"
 )
+
+//go:embed templates/default.txt
+var defaultMapStr string
+
+// go:embed templates/easy.txt
+// var easyMapStr string
 
 type GameMap [][]string
 
 func Read(name string) *GameMap {
-	asset := fmt.Sprintf("maps/templates/%s.txt", name)
-	data, err := os.ReadFile(asset)
-	if err != nil {
-		fmt.Println("File reading error", err)
-		return nil
-	}
-
-	rows := strings.Split(string(data), "\n")
+	rows := strings.Split(defaultMapStr, "\n")
 	res := make([][]string, 0, len(rows))
 	for _, rowStr := range rows {
 		res = append(res, strings.Split(rowStr, ""))

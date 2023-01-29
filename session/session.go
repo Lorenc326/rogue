@@ -2,6 +2,7 @@ package session
 
 import (
 	"errors"
+	"time"
 
 	"rogue.game/maps"
 	"rogue.game/user"
@@ -13,15 +14,17 @@ type Event struct {
 }
 
 type Session struct {
-	step    int
-	gamemap *maps.GameMap
-	IsEnded bool
+	step      int
+	createdAt time.Time
+	gamemap   *maps.GameMap
+	IsEnded   bool
 	// user is extracted from map source
 	user *user.User
 }
 
 func (s *Session) Init() {
 	s.gamemap = maps.Read("default")
+	s.createdAt = time.Now().UTC()
 	s.user = &user.User{}
 	s.user.Extract(s.gamemap)
 }
