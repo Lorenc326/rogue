@@ -49,11 +49,11 @@ func (u *Player) Clone() *Player {
 
 func (u *Player) Move(m *maps.GameMap, direction string) error {
 	switch direction {
-	case "top":
+	case "up":
 		u.I--
 	case "right":
 		u.J++
-	case "bottom":
+	case "down":
 		u.I++
 	case "left":
 		u.J--
