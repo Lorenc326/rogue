@@ -42,10 +42,10 @@ func (s *Session) React(event Event) error {
 	default:
 		return errors.New("unsupported")
 	}
+	s.step++
 	return nil
 }
 
 func (s *Session) RenderASCII() string {
-	s.step++
 	return s.player.RenderVision(s.gamemap).String()
 }

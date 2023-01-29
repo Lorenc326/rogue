@@ -25,7 +25,7 @@ func Read(name string) *GameMap {
 }
 
 func (m *GameMap) String() string {
-	rows := []string{}
+	rows := make([]string, len(*m))
 	for i, row := range *m {
 		rows[i] = strings.Join(row, "")
 	}
