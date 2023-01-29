@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"rogue.game/maps"
-	"rogue.game/user"
+	"rogue.game/core/maps"
+	"rogue.game/core/player"
 )
 
 type Event struct {
@@ -18,27 +18,27 @@ type Session struct {
 	createdAt time.Time
 	gamemap   *maps.GameMap
 	IsEnded   bool
-	// user is extracted from map source
-	user *user.User
+	// player is extracted from map source
+	player *player.Player
 }
 
 func (s *Session) Init() {
 	s.gamemap = maps.Read("default")
 	s.createdAt = time.Now().UTC()
-	s.user = &user.User{}
-	s.user.Extract(s.gamemap)
+	s.player = &player.Player{}
+	s.player.Extract(s.gamemap)
 }
 
 func (s *Session) React(event Event) error {
-	projected := s.user.Clone()
+	projected := s.player.Clone()
 	switch event.Action {
 	case "move":
 		err := projected.Move(s.gamemap, event.Direction)
 		if err != nil {
 			return err
 		}
-		s.user = projected
-		s.IsEnded = s.user.Victory(s.gamemap)
+		s.player = projected
+		s.IsEnded = s.player.Victory(s.gamemap)
 	default:
 		return errors.New("unsupported")
 	}
@@ -47,5 +47,5 @@ func (s *Session) React(event Event) error {
 
 func (s *Session) RenderASCII() string {
 	s.step++
-	return s.user.RenderVision(s.gamemap).String()
+	return s.player.RenderVision(s.gamemap).String()
 }

@@ -1,22 +1,22 @@
-package user
+package player
 
 import (
 	"errors"
 
-	"rogue.game/maps"
-	"rogue.game/symbol"
+	"rogue.game/core/maps"
+	"rogue.game/core/symbol"
 )
 
 const offset = 5
 
-type User struct {
+type Player struct {
 	I, J int // much clearer what is expected then with x, y
 }
 
-func (u *User) Extract(m *maps.GameMap) {
+func (u *Player) Extract(m *maps.GameMap) {
 	for i, row := range *m {
 		for j, col := range row {
-			if symbol.User == col {
+			if symbol.Player == col {
 				u.I = i
 				u.J = j
 				(*m)[i][j] = symbol.Floor
@@ -27,7 +27,7 @@ func (u *User) Extract(m *maps.GameMap) {
 }
 
 // awful huck so map template HAS to have 5 spaces offsets to not break vision haha
-func (u *User) RenderVision(m *maps.GameMap) *maps.UserVision {
+func (u *Player) RenderVision(m *maps.GameMap) *maps.UserVision {
 	userMap := maps.UserVision{}
 	for i := 0; i < 11; i++ {
 		for j := 0; j < 11; j++ {
@@ -38,16 +38,16 @@ func (u *User) RenderVision(m *maps.GameMap) *maps.UserVision {
 	return &userMap
 }
 
-func (u *User) insert(m *maps.UserVision) {
-	(*m)[offset][offset] = symbol.User
+func (u *Player) insert(m *maps.UserVision) {
+	(*m)[offset][offset] = symbol.Player
 }
 
 // unnecessary?
-func (u *User) Clone() *User {
-	return &User{I: u.I, J: u.J}
+func (u *Player) Clone() *Player {
+	return &Player{I: u.I, J: u.J}
 }
 
-func (u *User) Move(m *maps.GameMap, direction string) error {
+func (u *Player) Move(m *maps.GameMap, direction string) error {
 	switch direction {
 	case "top":
 		u.I--
@@ -63,7 +63,7 @@ func (u *User) Move(m *maps.GameMap, direction string) error {
 	return u.validateDestination(m)
 }
 
-func (u *User) Victory(m *maps.GameMap) bool {
+func (u *Player) Victory(m *maps.GameMap) bool {
 	location := (*m)[u.I][u.J]
 	switch location {
 	case symbol.End:
@@ -72,7 +72,7 @@ func (u *User) Victory(m *maps.GameMap) bool {
 	return false
 }
 
-func (u *User) validateDestination(m *maps.GameMap) error {
+func (u *Player) validateDestination(m *maps.GameMap) error {
 	location := (*m)[u.I][u.J]
 	switch location {
 	case symbol.Wall, symbol.Lava:

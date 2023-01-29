@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"rogue.game/session"
+	"rogue.game/core/session"
 )
 
 const winStatus = 228
