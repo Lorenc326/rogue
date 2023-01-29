@@ -12,7 +12,7 @@ func (s *Session) Init() {
 	s.gamemap = maps.Read("default")
 }
 
-func (s *Session) RenderUserVision() *maps.UserVision {
+func (s *Session) Render() *maps.UserVision {
 	userMap := maps.UserVision{}
 	for i := 0; i < 11; i++ {
 		for j := 0; j < 11; j++ {
