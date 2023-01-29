@@ -22,7 +22,7 @@ type Session struct {
 }
 
 func (s *Session) Init() {
-	s.gamemap = maps.Read("default")
+	s.gamemap = maps.Read("easy")
 	s.user = &user.User{}
 	s.user.Extract(s.gamemap)
 }
