@@ -2,7 +2,6 @@ package session
 
 import (
 	"errors"
-	"log"
 
 	"rogue.game/maps"
 	"rogue.game/user"
@@ -22,7 +21,7 @@ type Session struct {
 }
 
 func (s *Session) Init() {
-	s.gamemap = maps.Read("easy")
+	s.gamemap = maps.Read("default")
 	s.user = &user.User{}
 	s.user.Extract(s.gamemap)
 }
@@ -43,8 +42,7 @@ func (s *Session) React(event Event) error {
 	return nil
 }
 
-func (s *Session) Render() *maps.UserVision {
+func (s *Session) RenderASCII() string {
 	s.step++
-	log.Println(s.gamemap)
-	return s.user.RenderVision(s.gamemap)
+	return s.user.RenderVision(s.gamemap).String()
 }
