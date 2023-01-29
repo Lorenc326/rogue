@@ -2,6 +2,7 @@ package session
 
 import (
 	"errors"
+	"log"
 
 	"rogue.game/maps"
 	"rogue.game/user"
@@ -34,6 +35,7 @@ func (s *Session) React(event Event) error {
 		if err != nil {
 			return err
 		}
+		s.user = projected
 		s.IsEnded = s.user.Victory(s.gamemap)
 	default:
 		return errors.New("unsupported")
@@ -43,5 +45,6 @@ func (s *Session) React(event Event) error {
 
 func (s *Session) Render() *maps.UserVision {
 	s.step++
+	log.Println(s.gamemap)
 	return s.user.RenderVision(s.gamemap)
 }

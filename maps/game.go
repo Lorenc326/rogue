@@ -25,3 +25,11 @@ func Read(name string) *GameMap {
 	gamemap := GameMap(res)
 	return &gamemap
 }
+
+func (m *GameMap) String() string {
+	rows := []string{}
+	for i, row := range *m {
+		rows[i] = strings.Join(row, "")
+	}
+	return strings.Join(rows, "\n")
+}

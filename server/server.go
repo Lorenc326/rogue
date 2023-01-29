@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,10 +20,31 @@ func Listen(port int) {
 			sess := &session.Session{}
 			sess.Init()
 			cache[id] = sess
+			c.String(http.StatusOK, sess.Render().String())
+			return
 		}
 
-		output := cache[id].Render()
-		c.String(http.StatusOK, output.String())
+		sess := cache[id]
+		if sess.IsEnded {
+			c.String(http.StatusOK, "you won!!!")
+			return
+		}
+
+		var body session.Event
+		if err := c.BindJSON(&body); err != nil {
+			log.Println(err)
+			c.String(http.StatusOK, sess.Render().String())
+			return
+		}
+		if err := sess.React(body); err != nil {
+			log.Println(err)
+			c.String(http.StatusOK, sess.Render().String())
+		}
+		if sess.IsEnded {
+			c.String(http.StatusOK, "you won!!!")
+			return
+		}
+		c.String(http.StatusOK, sess.Render().String())
 	})
 	r.Run(fmt.Sprintf(":%d", port))
 }
