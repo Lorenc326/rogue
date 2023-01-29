@@ -1,6 +1,8 @@
 package user
 
 import (
+	"errors"
+
 	"rogue.game/maps"
 	"rogue.game/symbol"
 )
@@ -38,4 +40,43 @@ func (u *User) RenderVision(m *maps.GameMap) *maps.UserVision {
 
 func (u *User) insert(m *maps.GameMap) {
 	(*m)[u.I][u.J] = symbol.User
+}
+
+// unnecessary?
+func (u *User) Clone() *User {
+	return &User{I: u.I, J: u.J}
+}
+
+func (u *User) Move(m *maps.GameMap, direction string) error {
+	switch direction {
+	case "top":
+		u.I--
+	case "right":
+		u.J++
+	case "bottom":
+		u.I++
+	case "left":
+		u.J--
+	default:
+		return errors.New("not defined")
+	}
+	return u.validateDestination(m)
+}
+
+func (u *User) Victory(m *maps.GameMap) bool {
+	location := (*m)[u.I][u.J]
+	switch location {
+	case symbol.End:
+		return true
+	}
+	return false
+}
+
+func (u *User) validateDestination(m *maps.GameMap) error {
+	location := (*m)[u.I][u.J]
+	switch location {
+	case symbol.Wall, symbol.Lava:
+		return errors.New("ahhhhh")
+	}
+	return nil
 }
