@@ -3,7 +3,7 @@ build:
 	GOARCH=amd64 GOOS=darwin go build -o bin/web/rogue web/main.go
 	GOARCH=amd64 GOOS=windows go build -o bin/cmd/rogue.exe cmd/main.go
 	GOARCH=amd64 GOOS=darwin go build -o bin/cmd/rogue cmd/main.go
-web:
+api:
 	go run ./web
-cmd:
+shell:
 	go run ./cmd

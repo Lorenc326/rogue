@@ -43,11 +43,11 @@ func handleGame(c *gin.Context) {
 		return
 	}
 
-	sess := cache[id]
+	s := cache[id]
 	// errors are ignored, the only change to consider is done/active status code
 	status := http.StatusOK
-	if win := handleActiveSession(c, sess); win {
+	if win := handleActiveSession(c, s); win {
 		status = winStatus
 	}
-	c.String(status, sess.RenderASCII())
+	c.String(status, s.RenderASCII())
 }

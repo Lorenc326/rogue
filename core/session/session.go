@@ -6,6 +6,8 @@ import (
 
 	"rogue.game/core/maps"
 	"rogue.game/core/player"
+	"rogue.game/core/renderer"
+	"rogue.game/core/symbol"
 )
 
 type Event struct {
@@ -16,29 +18,29 @@ type Event struct {
 type Session struct {
 	step      int
 	createdAt time.Time
-	gamemap   *maps.GameMap
+	floormap  *maps.FloorMap
 	IsEnded   bool
 	// player is extracted from map source
 	player *player.Player
 }
 
 func (s *Session) Init() {
-	s.gamemap = maps.Read("default")
+	s.floormap = maps.Read("default")
 	s.createdAt = time.Now().UTC()
-	s.player = &player.Player{}
-	s.player.Extract(s.gamemap)
+	s.player = &player.Player{Coord: *s.floormap.Find(symbol.Player)}
+	s.floormap.Replace(s.player.Coord, symbol.Floor)
 }
 
 func (s *Session) React(event Event) error {
-	projected := s.player.Clone()
+	projected := *s.player
 	switch event.Action {
 	case "move":
-		err := projected.Move(s.gamemap, event.Direction)
+		err := projected.Move(s.floormap, event.Direction)
 		if err != nil {
 			return err
 		}
-		s.player = projected
-		s.IsEnded = s.player.Victory(s.gamemap)
+		s.player = &projected
+		s.IsEnded = s.player.Victory(s.floormap)
 	default:
 		return errors.New("unsupported")
 	}
@@ -47,5 +49,9 @@ func (s *Session) React(event Event) error {
 }
 
 func (s *Session) RenderASCII() string {
-	return s.player.RenderVision(s.gamemap).String()
+	return renderer.ASCII(renderer.PlayerCenteredMap(s.floormap, s.player, 5))
+}
+
+func (s *Session) RenderASCIIWide() string {
+	return renderer.ASCIIWide(renderer.PlayerCenteredMap(s.floormap, s.player, 10))
 }
