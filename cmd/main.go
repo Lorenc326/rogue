@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"rogue.game/core/event"
 	"rogue.game/core/session"
@@ -39,10 +38,6 @@ func main() {
 			}
 		}
 		render(sess)
-		if sess.IsEnded {
-			time.Sleep(3 * time.Second)
-			break
-		}
 	}
 }
 

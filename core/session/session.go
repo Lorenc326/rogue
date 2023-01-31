@@ -30,6 +30,9 @@ func New(renderer Renderer) *Session {
 }
 
 func (s *Session) React(e event.Event) error {
+	if s.IsEnded {
+		return nil
+	}
 	projected := *s.player
 	switch e.Action {
 	case event.Move:

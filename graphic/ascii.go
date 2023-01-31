@@ -1,12 +1,16 @@
 package graphic
 
 import (
+	_ "embed"
 	"strings"
 
 	"rogue.game/core/maps"
 	"rogue.game/core/session"
 	"rogue.game/core/symbol"
 )
+
+//go:embed assets/victory.txt
+var vistoryStr string
 
 type vision = func(src maps.Floor, c maps.Coord, offset int) maps.Floor
 
@@ -28,6 +32,9 @@ func NewASCII(offset int, centered, wide bool) ascii {
 }
 
 func (g ascii) Render(c session.DrawContext) string {
+	if c.IsEnded {
+		return vistoryStr
+	}
 	m := c.Floor.Clone()
 	m.Insert(c.Player.Coord, symbol.Player)
 	m = g.vision(m, c.Player.Coord, g.offset)
