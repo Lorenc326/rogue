@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"rogue.game/core/action"
 	"rogue.game/core/maps"
 	"rogue.game/core/player"
 	"rogue.game/core/symbol"
@@ -36,7 +37,7 @@ func New(renderer Renderer) *Session {
 func (s *Session) React(event Event) error {
 	projected := *s.player
 	switch event.Action {
-	case "move":
+	case action.Move:
 		err := projected.Move(s.floormap, event.Direction)
 		if err != nil {
 			return err

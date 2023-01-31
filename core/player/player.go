@@ -3,6 +3,7 @@ package player
 import (
 	"errors"
 
+	"rogue.game/core/action"
 	"rogue.game/core/maps"
 	"rogue.game/core/symbol"
 )
@@ -13,13 +14,13 @@ type Player struct {
 
 func (u *Player) Move(m *maps.FloorMap, direction string) error {
 	switch direction {
-	case "up":
+	case action.Up:
 		u.Coord.I--
-	case "right":
+	case action.Right:
 		u.Coord.J++
-	case "down":
+	case action.Down:
 		u.Coord.I++
-	case "left":
+	case action.Left:
 		u.Coord.J--
 	default:
 		return errors.New("not defined")
