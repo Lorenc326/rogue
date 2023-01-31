@@ -4,21 +4,16 @@ import (
 	"errors"
 	"time"
 
-	"rogue.game/core/action"
+	"rogue.game/core/event"
 	"rogue.game/core/maps"
 	"rogue.game/core/player"
 	"rogue.game/core/symbol"
 )
 
-type Event struct {
-	Action    string `json:"action"`
-	Direction string `json:"direction"`
-}
-
 type Session struct {
 	step      int
 	createdAt time.Time
-	floormap  *maps.FloorMap
+	Floor     *maps.Floor
 	IsEnded   bool
 	player    *player.Player
 	renderer  Renderer
@@ -26,27 +21,27 @@ type Session struct {
 
 func New(renderer Renderer) *Session {
 	s := Session{}
-	s.floormap = maps.Read("default")
+	s.Floor = maps.Read("default")
 	s.renderer = renderer
 	s.createdAt = time.Now().UTC()
-	s.player = &player.Player{Coord: *s.floormap.Find(symbol.Player)}
-	s.floormap.Replace(s.player.Coord, symbol.Floor)
+	s.player = &player.Player{Coord: *s.Floor.Find(symbol.Player)}
+	s.Floor.Replace(s.player.Coord, symbol.Floor)
 	return &s
 }
 
-func (s *Session) React(event Event) error {
+func (s *Session) React(e event.Event) error {
 	projected := *s.player
-	switch event.Action {
-	case action.Move:
-		err := projected.Move(s.floormap, event.Direction)
+	switch e.Action {
+	case event.Move:
+		err := projected.Move(s.Floor, e.Direction, 1)
 		if err != nil {
 			return err
 		}
-		s.player = &projected
-		s.IsEnded = s.player.Victory(s.floormap)
 	default:
 		return errors.New("unsupported")
 	}
+	s.player = &projected
+	s.IsEnded = s.player.Victory(s.Floor)
 	s.step++
 	return nil
 }

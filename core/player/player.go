@@ -3,7 +3,7 @@ package player
 import (
 	"errors"
 
-	"rogue.game/core/action"
+	"rogue.game/core/event"
 	"rogue.game/core/maps"
 	"rogue.game/core/symbol"
 )
@@ -12,23 +12,23 @@ type Player struct {
 	Coord maps.Coord
 }
 
-func (u *Player) Move(m *maps.FloorMap, direction string) error {
+func (u *Player) Move(m *maps.Floor, direction string, step int) error {
 	switch direction {
-	case action.Up:
-		u.Coord.I--
-	case action.Right:
-		u.Coord.J++
-	case action.Down:
-		u.Coord.I++
-	case action.Left:
-		u.Coord.J--
+	case event.Up:
+		u.Coord.I -= step
+	case event.Right:
+		u.Coord.J += step
+	case event.Down:
+		u.Coord.I += step
+	case event.Left:
+		u.Coord.J -= step
 	default:
 		return errors.New("not defined")
 	}
 	return u.validateDestination(m)
 }
 
-func (u *Player) Victory(m *maps.FloorMap) bool {
+func (u *Player) Victory(m *maps.Floor) bool {
 	location := (*m)[u.Coord.I][u.Coord.J]
 	switch location {
 	case symbol.End:
@@ -37,7 +37,7 @@ func (u *Player) Victory(m *maps.FloorMap) bool {
 	return false
 }
 
-func (u *Player) validateDestination(m *maps.FloorMap) error {
+func (u *Player) validateDestination(m *maps.Floor) error {
 	location := (*m)[u.Coord.I][u.Coord.J]
 	switch location {
 	case symbol.Wall, symbol.Lava:

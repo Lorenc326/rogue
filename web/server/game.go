@@ -5,8 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"rogue.game/core/graphic"
+	"rogue.game/core/event"
 	"rogue.game/core/session"
+	"rogue.game/graphic"
 )
 
 const winStatus = 228
@@ -18,7 +19,7 @@ func handleActiveSession(c *gin.Context, sess *session.Session) bool {
 		return true
 	}
 
-	var body session.Event
+	var body event.Event
 	if err := c.BindJSON(&body); err != nil {
 		log.Println(err)
 		return false

@@ -16,20 +16,20 @@ type Coord struct {
 	I, J int // much clearer what is expected then with x, y
 }
 
-type FloorMap [][]string
+type Floor [][]string
 
-func Read(name string) *FloorMap {
+func Read(name string) *Floor {
 	rows := strings.Split(defaultMapStr, "\n")
 	res := make([][]string, 0, len(rows))
 	for _, rowStr := range rows {
 		res = append(res, strings.Split(rowStr, ""))
 	}
 
-	floormap := FloorMap(res)
-	return &floormap
+	Floor := Floor(res)
+	return &Floor
 }
 
-func (m *FloorMap) Slice(tl Coord, br Coord) FloorMap {
+func (m *Floor) Slice(tl Coord, br Coord) Floor {
 	if tl.I > br.I || tl.J > br.J {
 		panic(errors.New("invalid coords, can't slice map"))
 	}
@@ -42,14 +42,14 @@ func (m *FloorMap) Slice(tl Coord, br Coord) FloorMap {
 			sliced[i][j] = (*m)[tl.I+i][tl.J+j]
 		}
 	}
-	return FloorMap(sliced)
+	return Floor(sliced)
 }
 
-func (m *FloorMap) Insert(c Coord, symbol string) {
+func (m *Floor) Insert(c Coord, symbol string) {
 	(*m)[c.I][c.J] = symbol
 }
 
-func (m *FloorMap) Find(symbol string) *Coord {
+func (m *Floor) Find(symbol string) *Coord {
 	for i, row := range *m {
 		for j, col := range row {
 			if col == symbol {
@@ -60,6 +60,25 @@ func (m *FloorMap) Find(symbol string) *Coord {
 	return nil
 }
 
-func (m *FloorMap) Replace(c Coord, new string) {
+func (m *Floor) Replace(c Coord, new string) {
 	(*m)[c.I][c.J] = new
+}
+
+// map template HAS to be with offset spaces in template (awful huck haha)
+func (m *Floor) SliceCentered(c Coord, offset int) Floor {
+	return m.Slice(
+		Coord{I: c.I - offset, J: c.J - offset},
+		Coord{I: c.I + offset + 1, J: c.J + offset + 1},
+	)
+}
+
+func (m *Floor) Clone() Floor {
+	height := len(*m)
+	sliced := make([][]string, height)
+	for i := 0; i < height; i++ {
+		width := len((*m)[i])
+		sliced[i] = make([]string, width)
+		copy(sliced[i], (*m)[i])
+	}
+	return Floor(sliced)
 }

@@ -10,15 +10,15 @@ type Renderer interface {
 }
 
 type DrawContext struct {
-	Floormap *maps.FloorMap
-	IsEnded  bool
-	Player   *player.Player
+	Floor   *maps.Floor
+	IsEnded bool
+	Player  *player.Player
 }
 
 func (s *Session) Draw() string {
 	return s.renderer.Render(DrawContext{
-		Floormap: s.floormap,
-		IsEnded:  s.IsEnded,
-		Player:   s.player,
+		Floor:   s.Floor,
+		IsEnded: s.IsEnded,
+		Player:  s.player,
 	})
 }

@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"rogue.game/core/graphic"
+	"rogue.game/core/event"
 	"rogue.game/core/session"
+	"rogue.game/graphic"
 
 	term "github.com/nsf/termbox-go"
 )
@@ -17,24 +18,24 @@ func main() {
 	}
 	defer term.Close()
 
-	sess := session.New(graphic.NewASCII(5, true, false))
+	sess := session.New(graphic.NewASCII(0, false, true))
 	render(sess)
 
 	for {
-		event := term.PollEvent()
-		switch event.Type {
+		e := term.PollEvent()
+		switch e.Type {
 		case term.EventKey:
-			switch event.Key {
+			switch e.Key {
 			case term.KeyEsc:
 				return
 			case term.KeyArrowUp:
-				sess.React(session.Event{Action: "move", Direction: "up"})
+				sess.React(event.Event{Action: "move", Direction: "up"})
 			case term.KeyArrowRight:
-				sess.React(session.Event{Action: "move", Direction: "right"})
+				sess.React(event.Event{Action: "move", Direction: "right"})
 			case term.KeyArrowDown:
-				sess.React(session.Event{Action: "move", Direction: "down"})
+				sess.React(event.Event{Action: "move", Direction: "down"})
 			case term.KeyArrowLeft:
-				sess.React(session.Event{Action: "move", Direction: "left"})
+				sess.React(event.Event{Action: "move", Direction: "left"})
 			}
 		}
 		render(sess)

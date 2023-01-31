@@ -1,4 +1,4 @@
-package action
+package event
 
 const (
 	Move = "move"
