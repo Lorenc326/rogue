@@ -6,7 +6,6 @@ import (
 
 	"rogue.game/core/maps"
 	"rogue.game/core/player"
-	"rogue.game/core/renderer"
 	"rogue.game/core/symbol"
 )
 
@@ -20,15 +19,18 @@ type Session struct {
 	createdAt time.Time
 	floormap  *maps.FloorMap
 	IsEnded   bool
-	// player is extracted from map source
-	player *player.Player
+	player    *player.Player
+	renderer  Renderer
 }
 
-func (s *Session) Init() {
+func New(renderer Renderer) *Session {
+	s := Session{}
 	s.floormap = maps.Read("default")
+	s.renderer = renderer
 	s.createdAt = time.Now().UTC()
 	s.player = &player.Player{Coord: *s.floormap.Find(symbol.Player)}
 	s.floormap.Replace(s.player.Coord, symbol.Floor)
+	return &s
 }
 
 func (s *Session) React(event Event) error {
@@ -46,12 +48,4 @@ func (s *Session) React(event Event) error {
 	}
 	s.step++
 	return nil
-}
-
-func (s *Session) RenderASCII() string {
-	return renderer.ASCII(renderer.PlayerCenteredMap(s.floormap, s.player, 5))
-}
-
-func (s *Session) RenderASCIIWide() string {
-	return renderer.ASCIIWide(renderer.PlayerCenteredMap(s.floormap, s.player, 10))
 }

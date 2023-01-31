@@ -1,28 +1,10 @@
-package renderer
+package graphic
 
 import (
-	"strings"
-
 	"rogue.game/core/maps"
 	"rogue.game/core/player"
 	"rogue.game/core/symbol"
 )
-
-func ASCII(m *maps.FloorMap) string {
-	rows := make([]string, len(*m))
-	for i, row := range *m {
-		rows[i] = strings.Join(row, "")
-	}
-	return strings.Join(rows, "\n")
-}
-
-func ASCIIWide(m *maps.FloorMap) string {
-	rows := make([]string, len(*m))
-	for i, row := range *m {
-		rows[i] = strings.Join(row, " ")
-	}
-	return " " + strings.Join(rows, "\n")
-}
 
 // map template HAS to be with offset spaces in template (awful huck haha)
 func PlayerCenteredMap(m *maps.FloorMap, p *player.Player, offset int) *maps.FloorMap {

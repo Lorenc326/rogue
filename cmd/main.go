@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
+	"rogue.game/core/graphic"
 	"rogue.game/core/session"
 
 	term "github.com/nsf/termbox-go"
@@ -17,9 +17,8 @@ func main() {
 	}
 	defer term.Close()
 
-	sess := session.Session{}
-	sess.Init()
-	render(&sess)
+	sess := session.New(graphic.NewASCII(5, true, false))
+	render(sess)
 
 	for {
 		event := term.PollEvent()
@@ -38,7 +37,7 @@ func main() {
 				sess.React(session.Event{Action: "move", Direction: "left"})
 			}
 		}
-		render(&sess)
+		render(sess)
 		if sess.IsEnded {
 			time.Sleep(3 * time.Second)
 			break
@@ -48,9 +47,5 @@ func main() {
 
 func render(sess *session.Session) {
 	term.Sync()
-	fmt.Println(widerOutput(sess.RenderASCII()))
-}
-
-func widerOutput(render string) string {
-	return " " + strings.Join(strings.Split(render, ""), " ")
+	fmt.Println(sess.Draw())
 }

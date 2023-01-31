@@ -5,17 +5,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"rogue.game/core/graphic"
 	"rogue.game/core/session"
 )
 
 const winStatus = 228
 
 var cache = map[string]*session.Session{}
-
-func renderInitialSession(sess *session.Session) string {
-	sess.Init()
-	return sess.RenderASCII()
-}
 
 func handleActiveSession(c *gin.Context, sess *session.Session) bool {
 	if sess.IsEnded {
@@ -38,8 +34,8 @@ func handleGame(c *gin.Context) {
 	id := c.Param("id")
 
 	if _, ok := cache[id]; !ok {
-		cache[id] = &session.Session{}
-		c.String(http.StatusOK, renderInitialSession(cache[id]))
+		cache[id] = session.New(graphic.NewASCII(5, true, false))
+		c.String(http.StatusOK, cache[id].Draw())
 		return
 	}
 
@@ -49,5 +45,5 @@ func handleGame(c *gin.Context) {
 	if win := handleActiveSession(c, s); win {
 		status = winStatus
 	}
-	c.String(status, s.RenderASCII())
+	c.String(status, s.Draw())
 }
