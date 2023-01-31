@@ -4,6 +4,8 @@ import (
 	_ "embed"
 	"errors"
 	"strings"
+
+	"rogue.game/core/geom"
 )
 
 //go:embed templates/default.txt
@@ -11,10 +13,6 @@ var defaultMapStr string
 
 // go:embed templates/easy.txt
 // var easyMapStr string
-
-type Coord struct {
-	I, J int // much clearer what is expected then with x, y
-}
 
 type Floor [][]string
 
@@ -29,9 +27,9 @@ func Read(name string) *Floor {
 	return &Floor
 }
 
-func (m *Floor) Slice(tl Coord, br Coord) Floor {
+func (m *Floor) Slice(tl geom.Coord, br geom.Coord) Floor {
 	if tl.I > br.I || tl.J > br.J {
-		panic(errors.New("invalid coords, can't slice map"))
+		panic(errors.New("invalid Coords, can't slice map"))
 	}
 	height := br.I - tl.I
 	width := br.J - tl.J
@@ -45,30 +43,30 @@ func (m *Floor) Slice(tl Coord, br Coord) Floor {
 	return Floor(sliced)
 }
 
-func (m *Floor) Insert(c Coord, symbol string) {
+func (m *Floor) Insert(c geom.Coord, symbol string) {
 	(*m)[c.I][c.J] = symbol
 }
 
-func (m *Floor) Find(symbol string) *Coord {
+func (m *Floor) Find(symbol string) *geom.Coord {
 	for i, row := range *m {
 		for j, col := range row {
 			if col == symbol {
-				return &Coord{I: i, J: j}
+				return &geom.Coord{I: i, J: j}
 			}
 		}
 	}
 	return nil
 }
 
-func (m *Floor) Replace(c Coord, new string) {
+func (m *Floor) Replace(c geom.Coord, new string) {
 	(*m)[c.I][c.J] = new
 }
 
 // map template HAS to be with offset spaces in template (awful huck haha)
-func (m *Floor) SliceCentered(c Coord, offset int) Floor {
+func (m *Floor) SliceCentered(c geom.Coord, offset int) Floor {
 	return m.Slice(
-		Coord{I: c.I - offset, J: c.J - offset},
-		Coord{I: c.I + offset + 1, J: c.J + offset + 1},
+		geom.Coord{I: c.I - offset, J: c.J - offset},
+		geom.Coord{I: c.I + offset + 1, J: c.J + offset + 1},
 	)
 }
 

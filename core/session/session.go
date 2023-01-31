@@ -33,17 +33,18 @@ func (s *Session) React(e event.Event) error {
 	if s.IsEnded {
 		return nil
 	}
-	projected := *s.player
 	switch e.Action {
 	case event.Move:
-		err := projected.Move(s.Floor, e.Direction, 1)
+		projected := s.player.Coord
+		projected.Move(e.Direction, 1)
+		err := s.player.ValidateDestination(*s.Floor, projected)
 		if err != nil {
 			return err
 		}
+		s.player.Coord = projected
 	default:
 		return errors.New("unsupported")
 	}
-	s.player = &projected
 	s.IsEnded = s.player.Victory(s.Floor)
 	s.step++
 	return nil

@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"strings"
 
+	"rogue.game/core/geom"
 	"rogue.game/core/maps"
 	"rogue.game/core/session"
 	"rogue.game/core/symbol"
@@ -12,7 +13,7 @@ import (
 //go:embed assets/victory.txt
 var vistoryStr string
 
-type vision = func(src maps.Floor, c maps.Coord, offset int) maps.Floor
+type vision = func(src maps.Floor, c geom.Coord, offset int) maps.Floor
 
 type ascii struct {
 	intend string
@@ -41,11 +42,11 @@ func (g ascii) Render(c session.DrawContext) string {
 	return mapToString(&m, g.intend)
 }
 
-func fullVision(src maps.Floor, _ maps.Coord, _ int) maps.Floor {
+func fullVision(src maps.Floor, _ geom.Coord, _ int) maps.Floor {
 	return src
 }
 
-func centeredVision(src maps.Floor, c maps.Coord, offset int) maps.Floor {
+func centeredVision(src maps.Floor, c geom.Coord, offset int) maps.Floor {
 	return src.SliceCentered(c, offset)
 }
 
