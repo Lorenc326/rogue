@@ -1,5 +1,7 @@
 package dungeon
 
+import "rogue.game/core/geo"
+
 type Material int
 
 const (
@@ -22,4 +24,15 @@ func fillTiles(width, height int) [][]tile {
 		tiles[i] = make([]tile, width)
 	}
 	return tiles
+}
+
+func every(tiles [][]tile, subset geo.Rect, m Material) bool {
+	for i := subset.TL.Y; i <= subset.BR.Y; i++ {
+		for j := subset.TL.X; j <= subset.BR.X; j++ {
+			if tiles[i][j].material != m {
+				return false
+			}
+		}
+	}
+	return true
 }
