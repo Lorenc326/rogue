@@ -29,6 +29,9 @@ func Generate(seed int64, width, height int) *Dungeon {
 	dungeon := new(seed, width, height)
 	dungeon.createRooms()
 	dungeon.createMaze()
+	dungeon.collectEdges()
+	dungeon.connectRooms()
+	dungeon.trimTunnels()
 	return dungeon
 }
 

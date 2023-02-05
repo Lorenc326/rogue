@@ -56,3 +56,44 @@ func (d *Dungeon) continueMaze(x int, y int) {
 	d.continueMaze(point.X, point.Y)
 	d.continueMaze(x, y)
 }
+
+func (d *Dungeon) trimTunnels() {
+	for x := 1; x < d.width-1; x++ {
+		for y := 1; y < d.height-1; y++ {
+			d.continueTrimTunnels(x, y)
+		}
+	}
+}
+
+func (d *Dungeon) continueTrimTunnels(x int, y int) {
+	if d.tiles[y][x].material != Tunnel && d.tiles[y][x].material != Door {
+		return
+	}
+
+	wallCount := 0
+	nextPoint := geo.Point{}
+
+	surroundingPoints := [4]geo.Point{
+		{X: x - 1, Y: y},
+		{X: x + 1, Y: y},
+		{X: x, Y: y - 1},
+		{X: x, Y: y + 1},
+	}
+
+	for i := range surroundingPoints {
+		tile := d.tiles[surroundingPoints[i].Y][surroundingPoints[i].X]
+		if tile.material == Wall {
+			wallCount++
+		} else if tile.material == Tunnel || tile.material == Door {
+			nextPoint = geo.Point{X: surroundingPoints[i].X, Y: surroundingPoints[i].Y}
+		}
+	}
+
+	if wallCount >= 3 {
+		d.tiles[y][x].material = Wall
+		d.tiles[y][x].region = 0
+		if nextPoint.X != 0 || nextPoint.Y != 0 {
+			d.continueTrimTunnels(nextPoint.X, nextPoint.Y)
+		}
+	}
+}

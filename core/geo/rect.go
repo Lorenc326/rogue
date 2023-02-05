@@ -28,3 +28,16 @@ func (r Rect) Width() int {
 func (r Rect) Height() int {
 	return r.BR.Y - r.TL.Y + 1
 }
+
+func (r Rect) Ring() []Point {
+	points := make([]Point, 0, r.Width()*2+r.Height()*2-4)
+	for x := r.TL.X; x <= r.BR.X; x++ {
+		points = append(points, Point{X: x, Y: r.TL.Y})
+		points = append(points, Point{X: x, Y: r.BR.Y})
+	}
+	for y := r.TL.Y; y <= r.BR.Y; y++ {
+		points = append(points, Point{X: r.TL.X, Y: y})
+		points = append(points, Point{X: r.BR.X, Y: y})
+	}
+	return points
+}
