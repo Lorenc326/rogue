@@ -8,12 +8,6 @@ import (
 	"rogue.game/core/geo"
 )
 
-// go:embed templates/default.txt
-// var defaultMapStr string
-
-// go:embed templates/easy.txt
-// var easyMapStr string
-
 type Floor [][]dungeon.Material
 
 func (m *Floor) Slice(tl geo.Point, br geo.Point) Floor {
@@ -51,7 +45,6 @@ func (m *Floor) Replace(c geo.Point, new dungeon.Material) {
 	(*m)[c.Y][c.X] = new
 }
 
-// map template HAS to be with offset spaces in template (awful huck haha)
 func (m *Floor) SliceCentered(c geo.Point, offset int) Floor {
 	return m.Slice(
 		geo.Point{Y: c.Y - offset, X: c.X - offset},

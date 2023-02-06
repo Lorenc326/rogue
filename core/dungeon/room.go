@@ -1,8 +1,6 @@
 package dungeon
 
 import (
-	"log"
-
 	"rogue.game/core/geo"
 )
 
@@ -94,7 +92,6 @@ func (d *Dungeon) collectEdges() {
 func (d *Dungeon) connectRooms() {
 	for i := range d.rooms {
 		r := &d.rooms[i]
-		log.Println(len(r.edges))
 		edge := r.edges[d.rand.Intn(len(r.edges))]
 		roomRegion := d.tiles[r.TL.Y][r.TL.X].region
 		edgeBox := geo.NewRect(geo.Point{X: edge.X - 1, Y: edge.Y - 1}, 3, 3).Ring()

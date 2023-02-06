@@ -20,9 +20,21 @@ type Session struct {
 }
 
 type SessionParametrs struct {
-	Seed   int64
-	Width  int
-	Height int
+	Seed   int64 `json:"seed"`
+	Width  int   `json:"width"`
+	Height int   `json:"height"`
+}
+
+func (p *SessionParametrs) SetDefaults() {
+	if p.Seed == 0 {
+		p.Seed = time.Now().UnixMilli()
+	}
+	if p.Width == 0 {
+		p.Width = 100
+	}
+	if p.Height == 0 {
+		p.Height = 75
+	}
 }
 
 func New(renderer Renderer, params SessionParametrs) *Session {

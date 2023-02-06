@@ -14,6 +14,47 @@ const winStatus = 228
 
 var cache = map[string]*session.Session{}
 
+type ErrResponse struct {
+	Error string `json:"error"`
+}
+
+type StartBody struct {
+	Seed   int `json:"seed"`
+	Width  int `json:"width"`
+	Height int `json:"height"`
+}
+
+func handleStart(c *gin.Context) {
+	id := c.Param("id")
+
+	var body session.SessionParametrs
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, ErrResponse{err.Error()})
+		return
+	}
+	body.SetDefaults()
+
+	cache[id] = session.New(graphic.NewASCII(5, true, false), body)
+	c.String(http.StatusOK, cache[id].Draw())
+}
+
+func handleGame(c *gin.Context) {
+	id := c.Param("id")
+
+	s, ok := cache[id]
+	if !ok {
+		c.JSON(http.StatusBadRequest, ErrResponse{"don't play with me, there is no such game"})
+		return
+	}
+
+	// errors are ignored, the only change to consider is done/active status code
+	status := http.StatusOK
+	if win := handleActiveSession(c, s); win {
+		status = winStatus
+	}
+	c.String(status, s.Draw())
+}
+
 func handleActiveSession(c *gin.Context, sess *session.Session) bool {
 	if sess.IsEnded {
 		return true
@@ -29,25 +70,4 @@ func handleActiveSession(c *gin.Context, sess *session.Session) bool {
 		return false
 	}
 	return sess.IsEnded
-}
-
-func handleGame(c *gin.Context) {
-	id := c.Param("id")
-
-	if _, ok := cache[id]; !ok {
-		cache[id] = session.New(
-			graphic.NewASCII(5, true, false),
-			session.SessionParametrs{Seed: 100, Width: 100, Height: 75},
-		)
-		c.String(http.StatusOK, cache[id].Draw())
-		return
-	}
-
-	s := cache[id]
-	// errors are ignored, the only change to consider is done/active status code
-	status := http.StatusOK
-	if win := handleActiveSession(c, s); win {
-		status = winStatus
-	}
-	c.String(status, s.Draw())
 }
