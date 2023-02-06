@@ -14,21 +14,16 @@ import (
 //go:embed assets/victory.txt
 var vistoryStr string
 
-type vision = func(src maps.Floor, c geo.Point, offset int) maps.Floor
-
 type ascii struct {
-	intend string
-	offset int
-	vision vision
+	intend   string
+	centered bool
+	offset   geo.Distance
 }
 
 func NewASCII(offset int, centered, wide bool) ascii {
-	r := ascii{vision: fullVision, offset: offset}
+	r := ascii{centered: centered, offset: geo.Distance{X: offset, Y: offset}}
 	if wide {
 		r.intend = " "
-	}
-	if centered {
-		r.vision = centeredVision
 	}
 	return r
 }
@@ -37,25 +32,33 @@ func (g ascii) Render(c session.DrawContext) string {
 	if c.IsEnded {
 		return vistoryStr
 	}
+
 	m := c.Floor.Clone()
 	m.Insert(c.Player.Point, dungeon.Player)
-	m = g.vision(m, c.Player.Point, g.offset)
-	return mapToString(m, g.intend)
+
+	var visionRect geo.Rect
+	if g.centered {
+		size := g.offset.X*2 + 1
+		visionRect = geo.NewRect(c.Player.Point.Sub(g.offset), size, size)
+	} else {
+		visionRect = geo.NewRect(geo.Point{X: 0, Y: 0}, len(c.Floor[0]), len(c.Floor))
+	}
+
+	return rectToString(m, visionRect, g.intend)
 }
 
-func fullVision(src maps.Floor, _ geo.Point, _ int) maps.Floor {
-	return src
-}
-
-func centeredVision(src maps.Floor, c geo.Point, offset int) maps.Floor {
-	return src.SliceCentered(c, offset)
-}
-
-func mapToString(m maps.Floor, intend string) string {
+func rectToString(m maps.Floor, r geo.Rect, intend string) string {
 	builder := strings.Builder{}
-
-	for _, row := range m {
-		for _, mat := range row {
+	for y := r.TL.Y; y <= r.BR.Y; y++ {
+		for x := r.TL.X; x <= r.BR.X; x++ {
+			var mat dungeon.Material
+			// if user is at the edge of the map and he has centered view
+			// its expected to receive negative coords so we can prefill empty space
+			if x < 0 || y < 0 {
+				mat = dungeon.Wall
+			} else {
+				mat = m[y][x]
+			}
 			builder.WriteString(symbol.MaterialToSymbol[mat] + intend)
 		}
 		builder.WriteString("\n")
