@@ -38,14 +38,3 @@ func every(tiles [][]tile, subset geo.Rect, m Material) bool {
 	}
 	return true
 }
-
-func (d *Dungeon) exportTiles() {
-	tiles := make([][]Material, len(d.tiles))
-	for i := range tiles {
-		tiles[i] = make([]Material, len(d.tiles[i]))
-		for j := range tiles[i] {
-			tiles[i][j] = d.tiles[i][j].material
-		}
-	}
-	d.Tiles = tiles
-}

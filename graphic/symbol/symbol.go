@@ -9,7 +9,7 @@ const (
 	Wall   = "#"
 	Void   = " "
 	Rat    = "r"
-	Door   = "="
+	Door   = "H"
 	End    = "x"
 	Lava   = "o"
 	Key    = "k"
