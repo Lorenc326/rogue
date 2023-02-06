@@ -4,10 +4,11 @@ import (
 	_ "embed"
 	"strings"
 
+	"rogue.game/core/dungeon"
 	"rogue.game/core/geo"
 	"rogue.game/core/maps"
 	"rogue.game/core/session"
-	"rogue.game/core/symbol"
+	"rogue.game/graphic/symbol"
 )
 
 //go:embed assets/victory.txt
@@ -37,9 +38,9 @@ func (g ascii) Render(c session.DrawContext) string {
 		return vistoryStr
 	}
 	m := c.Floor.Clone()
-	m.Insert(c.Player.Point, symbol.Player)
+	m.Insert(c.Player.Point, dungeon.Player)
 	m = g.vision(m, c.Player.Point, g.offset)
-	return mapToString(&m, g.intend)
+	return mapToString(m, g.intend)
 }
 
 func fullVision(src maps.Floor, _ geo.Point, _ int) maps.Floor {
@@ -50,10 +51,14 @@ func centeredVision(src maps.Floor, c geo.Point, offset int) maps.Floor {
 	return src.SliceCentered(c, offset)
 }
 
-func mapToString(m *maps.Floor, intend string) string {
-	rows := make([]string, len(*m))
-	for i, row := range *m {
-		rows[i] = strings.Join(row, intend)
+func mapToString(m maps.Floor, intend string) string {
+	builder := strings.Builder{}
+
+	for _, row := range m {
+		for _, mat := range row {
+			builder.WriteString(symbol.MaterialToSymbol[mat] + intend)
+		}
+		builder.WriteString("\n")
 	}
-	return strings.Join(rows, "\n")
+	return builder.String()
 }

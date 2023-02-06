@@ -4,28 +4,35 @@ import (
 	"errors"
 	"time"
 
+	"rogue.game/core/dungeon"
 	"rogue.game/core/event"
 	"rogue.game/core/maps"
 	"rogue.game/core/player"
-	"rogue.game/core/symbol"
 )
 
 type Session struct {
 	step      int
 	createdAt time.Time
-	Floor     *maps.Floor
+	Floor     maps.Floor
 	IsEnded   bool
 	player    *player.Player
 	renderer  Renderer
 }
 
-func New(renderer Renderer) *Session {
+type SessionParametrs struct {
+	Seed   int64
+	Width  int
+	Height int
+}
+
+func New(renderer Renderer, params SessionParametrs) *Session {
 	s := Session{}
-	s.Floor = maps.Read("default")
+	d := dungeon.Generate(params.Seed, params.Width, params.Height)
+	s.Floor = d.Tiles
 	s.renderer = renderer
 	s.createdAt = time.Now().UTC()
-	s.player = &player.Player{Point: *s.Floor.Find(symbol.Player)}
-	s.Floor.Replace(s.player.Point, symbol.Floor)
+	s.player = &player.Player{Point: *s.Floor.Find(dungeon.Player)}
+	s.Floor.Replace(s.player.Point, dungeon.Floor)
 	return &s
 }
 
@@ -37,7 +44,7 @@ func (s *Session) React(e event.Event) error {
 	case event.Move:
 		projected := s.player.Point
 		projected.Move(e.Direction, 1)
-		err := s.player.ValidateDestination(*s.Floor, projected)
+		err := s.player.ValidateDestination(s.Floor, projected)
 		if err != nil {
 			return err
 		}

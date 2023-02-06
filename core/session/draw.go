@@ -10,7 +10,7 @@ type Renderer interface {
 }
 
 type DrawContext struct {
-	Floor   *maps.Floor
+	Floor   maps.Floor
 	IsEnded bool
 	Player  *player.Player
 }

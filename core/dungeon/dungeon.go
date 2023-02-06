@@ -11,6 +11,8 @@ const (
 )
 
 type Dungeon struct {
+	Tiles [][]Material
+
 	tiles  [][]tile
 	rooms  []Room
 	width  int
@@ -32,6 +34,7 @@ func Generate(seed int64, width, height int) *Dungeon {
 	dungeon.collectEdges()
 	dungeon.connectRooms()
 	dungeon.trimTunnels()
+	dungeon.exportTiles()
 	return dungeon
 }
 

@@ -17,7 +17,10 @@ func main() {
 	}
 	defer term.Close()
 
-	sess := session.New(graphic.NewASCII(0, false, true))
+	sess := session.New(
+		graphic.NewASCII(0, false, true),
+		session.SessionParametrs{Seed: 100, Width: 60, Height: 40},
+	)
 	render(sess)
 
 	for {

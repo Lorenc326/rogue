@@ -35,7 +35,10 @@ func handleGame(c *gin.Context) {
 	id := c.Param("id")
 
 	if _, ok := cache[id]; !ok {
-		cache[id] = session.New(graphic.NewASCII(5, true, false))
+		cache[id] = session.New(
+			graphic.NewASCII(5, true, false),
+			session.SessionParametrs{Seed: 100, Width: 100, Height: 75},
+		)
 		c.String(http.StatusOK, cache[id].Draw())
 		return
 	}
