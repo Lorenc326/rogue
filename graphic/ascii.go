@@ -54,7 +54,7 @@ func rectToString(m maps.Floor, r geo.Rect, intend string) string {
 			var mat dungeon.Material
 			// if user is at the edge of the map and he has centered view
 			// its expected to receive negative coords so we can prefill empty space
-			if x < 0 || y < 0 {
+			if x < 0 || y < 0 || x >= len(m[0]) || y >= len(m) {
 				mat = dungeon.Wall
 			} else {
 				mat = m[y][x]
