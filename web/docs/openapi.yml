@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  description: |
+    API for the game.
+    Play and get rendered map as a response to your actions
+
+    Symbol map:
+    Player = "@"
+    Floor  = "."
+    Tunnel = "_"
+    Wall   = "#"
+    Void   = " "
+    Rat    = "r"
+    Door   = "H"
+    End    = "x"
+    Lava   = "o"
+    Key    = "k"
+  version: 2.0-oas3
+  title: Game API
+servers:
+  - description: server
+    url: 'http://localhost:8080'
+tags:
+  - name: Game
+paths:
+  /game/{game_id}/start:
+    parameters:
+      - $ref: '#/components/parameters/game_id'
+    post:
+      operationId: startGame
+      summary: Start game
+      tags:
+        - Game
+      description: Start game with options to parametrise dungeon generation, gets first render
+      requestBody:
+        description: Parametrise dungeon
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dungeon_config'
+      responses:
+        '200':
+          description: 'Initial render'
+          content:
+            text/plain:
+              schema:
+                description: 11x11 ASCII string with player at the center of matrix
+                type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  /game/{game_id}:
+    parameters:
+      - $ref: '#/components/parameters/game_id'
+    post:
+      operationId: playeGame
+      summary: Take action
+      tags:
+        - Game
+      description: Make an action and recieve a render
+      requestBody:
+        description: Action
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/action'
+      responses:
+        '200':
+          description: 'Game render'
+          content:
+            text/plain:
+              schema:
+                description: 11x11 ASCII string with player at the center of matrix
+                type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '228':
+          description: You won
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    dungeon_config:
+      type: object
+      properties:
+        seed:
+          type: integer
+        width:
+          type: integer
+        height:
+          type: integer
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+    action:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum: [move, stay]
+        direction:
+          type: string
+          enum: [up, down, left, right]
+  parameters:
+    game_id:
+      description: User-generated id for game
+      name: game_id
+      in: path
+      required: true
+      schema:
+        type: integer
+        example: 123
