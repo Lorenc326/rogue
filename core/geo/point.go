@@ -3,7 +3,7 @@ package geo
 import (
 	"errors"
 
-	"rogue.game/core/event"
+	"github.com/Lorenc326/rogue/core/event"
 )
 
 type Point struct {

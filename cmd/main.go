@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"rogue.game/core/event"
-	"rogue.game/core/session"
-	"rogue.game/graphic"
+	"github.com/Lorenc326/rogue/core/event"
+	"github.com/Lorenc326/rogue/core/session"
+	"github.com/Lorenc326/rogue/graphic"
 
 	term "github.com/nsf/termbox-go"
 )

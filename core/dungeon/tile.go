@@ -1,6 +1,6 @@
 package dungeon
 
-import "rogue.game/core/geo"
+import "github.com/Lorenc326/rogue/core/geo"
 
 type Material int
 

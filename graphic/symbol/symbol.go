@@ -1,6 +1,6 @@
 package symbol
 
-import "rogue.game/core/dungeon"
+import "github.com/Lorenc326/rogue/core/dungeon"
 
 const (
 	Player = "@"

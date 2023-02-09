@@ -1,4 +1,4 @@
-module rogue.game
+module github.com/Lorenc326/rogue
 
 go 1.19
 

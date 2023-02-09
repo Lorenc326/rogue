@@ -1,6 +1,6 @@
 package main
 
-import "rogue.game/web/server"
+import "github.com/Lorenc326/rogue/web/server"
 
 func main() {
 	server.Listen(8080)

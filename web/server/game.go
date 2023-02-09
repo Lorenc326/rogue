@@ -4,10 +4,10 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Lorenc326/rogue/core/event"
+	"github.com/Lorenc326/rogue/core/session"
+	"github.com/Lorenc326/rogue/graphic"
 	"github.com/gin-gonic/gin"
-	"rogue.game/core/event"
-	"rogue.game/core/session"
-	"rogue.game/graphic"
 )
 
 const winStatus = 228

@@ -4,11 +4,11 @@ import (
 	_ "embed"
 	"strings"
 
-	"rogue.game/core/dungeon"
-	"rogue.game/core/geo"
-	"rogue.game/core/maps"
-	"rogue.game/core/session"
-	"rogue.game/graphic/symbol"
+	"github.com/Lorenc326/rogue/core/dungeon"
+	"github.com/Lorenc326/rogue/core/geo"
+	"github.com/Lorenc326/rogue/core/maps"
+	"github.com/Lorenc326/rogue/core/session"
+	"github.com/Lorenc326/rogue/graphic/symbol"
 )
 
 //go:embed assets/victory.txt

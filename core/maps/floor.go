@@ -4,8 +4,8 @@ import (
 	_ "embed"
 	"errors"
 
-	"rogue.game/core/dungeon"
-	"rogue.game/core/geo"
+	"github.com/Lorenc326/rogue/core/dungeon"
+	"github.com/Lorenc326/rogue/core/geo"
 )
 
 type Floor [][]dungeon.Material

@@ -3,9 +3,9 @@ package player
 import (
 	"errors"
 
-	"rogue.game/core/dungeon"
-	"rogue.game/core/geo"
-	"rogue.game/core/maps"
+	"github.com/Lorenc326/rogue/core/dungeon"
+	"github.com/Lorenc326/rogue/core/geo"
+	"github.com/Lorenc326/rogue/core/maps"
 )
 
 type Player struct {

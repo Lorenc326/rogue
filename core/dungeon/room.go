@@ -1,7 +1,7 @@
 package dungeon
 
 import (
-	"rogue.game/core/geo"
+	"github.com/Lorenc326/rogue/core/geo"
 )
 
 type Room struct {

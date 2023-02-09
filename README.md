@@ -1,8 +1,8 @@
 # rogue
 
-Game with generated dungeons and accessible api. 
+Game with generated dungeons and accessible API. 
 
-Dungeon generation is based on [munificent](http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/) method and [brad811](https://github.com/brad811/go-dungeon) implementation. Can be played in cmd or with http requests. 
+The original purpose of it is to serve as an exercise for building a dungeon and a player AI that can complete it. Dungeon generation is based on [munificent](http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/) method and [brad811](https://github.com/brad811/go-dungeon) implementation. Can be played in cmd or with http requests. 
 
 ![terminal](cmd.jpg?raw=true "Title")
 
